@@ -1,0 +1,10 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "paths": {
+      "@threls/expo-pusher-beams": ["../src/index"],
+      "@threls/expo-pusher-beams/*": ["../src/*"]
+    }
+  }
+}
