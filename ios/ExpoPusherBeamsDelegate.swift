@@ -24,7 +24,7 @@ public class ExpoPusherBeamsDelegate: ExpoAppDelegateSubscriber {
         // The app is about to terminate.
     }
 
-    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+    public func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         self.beamsClient.registerDeviceToken(deviceToken)
     }
 }

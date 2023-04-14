@@ -19,6 +19,7 @@ PODS:
     - ReactCommon/turbomodule/core
   - ExpoPusherBeams (0.1.0):
     - ExpoModulesCore
+    - PushNotifications
   - FBLazyVector (0.71.6)
   - FBReactNativeSpec (0.71.6):
     - RCT-Folly (= 2021.07.22.00)
@@ -521,7 +522,7 @@ SPEC CHECKSUMS:
   Expo: b04d142a2b477a391b47c62d179c1a9e1140e6ad
   ExpoKeepAwake: 69f5f627670d62318410392d03e0b5db0f85759a
   ExpoModulesCore: 6e0259511f4c4341b6b8357db393624df2280828
-  ExpoPusherBeams: 5ef7c062a500e152d19580401ce337a013135af6
+  ExpoPusherBeams: 90f3a04eec02d009f99d4f4c9c771cc922dfc130
   FBLazyVector: a83ceaa8a8581003a623facdb3c44f6d4f342ac5
   FBReactNativeSpec: 85eee79837cb797ab6176f0243a2b40511c09158
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
@@ -560,4 +561,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 9e2eb2ebfd7f158554002be9da55451a8e2dcdfc
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.12.0
