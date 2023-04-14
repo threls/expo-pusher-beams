@@ -33,6 +33,7 @@ PODS:
     - hermes-engine/Pre-built (= 0.71.6)
   - hermes-engine/Pre-built (0.71.6)
   - libevent (2.1.12)
+  - PushNotifications (3.0.4)
   - RCT-Folly (2021.07.22.00):
     - boost
     - DoubleConversion
@@ -386,6 +387,7 @@ DEPENDENCIES:
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
   - libevent (~> 2.1.12)
+  - PushNotifications
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
@@ -417,6 +419,8 @@ DEPENDENCIES:
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
+  https://github.com/CocoaPods/Specs.git:
+    - PushNotifications
   trunk:
     - fmt
     - libevent
@@ -524,6 +528,7 @@ SPEC CHECKSUMS:
   glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
   hermes-engine: b434cea529ad0152c56c7cb6486b0c4c0b23b5de
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
+  PushNotifications: 6e3d148e5e129af9d4a9279b288c934f9a7f9066
   RCT-Folly: 424b8c9a7a0b9ab2886ffe9c3b041ef628fd4fb1
   RCTRequired: 5c6fd63b03abb06947d348dadac51c93e3485bd8
   RCTTypeSafety: 1c66daedd66f674e39ce9f40782f0d490c78b175
@@ -553,6 +558,6 @@ SPEC CHECKSUMS:
   ReactCommon: 0c43eaeaaee231d7d8dc24fc5a6e4cf2b75bf196
   Yoga: ba09b6b11e6139e3df8229238aa794205ca6a02a
 
-PODFILE CHECKSUM: 69fb2a15887afc4056bbf759e4032350aec1f5ae
+PODFILE CHECKSUM: 9e2eb2ebfd7f158554002be9da55451a8e2dcdfc
 
 COCOAPODS: 1.11.3

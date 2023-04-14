@@ -2,7 +2,7 @@ import ExpoModulesCore
 
 public class ExpoPusherBeamsModule: Module {
   // Each module class must implement the definition function. The definition consists of components
-  // that describes the module's functionality and behavior.
+  // that describes the module's functionality and behaviour.
   // See https://docs.expo.dev/modules/module-api for more details about available components.
   public func definition() -> ModuleDefinition {
     // Sets the name of the module that JavaScript code will use to refer to the module. Takes a string as an argument.
@@ -11,9 +11,9 @@ public class ExpoPusherBeamsModule: Module {
     Name("ExpoPusherBeams")
 
     // Sets constant properties on the module. Can take a dictionary or a closure that returns a dictionary.
-    Constants([
-      "PI": Double.pi
-    ])
+    // Constants([
+    //   "PI": Double.pi
+    // ])
 
     // Defines event names that the module can send to JavaScript.
     Events("onChange")
