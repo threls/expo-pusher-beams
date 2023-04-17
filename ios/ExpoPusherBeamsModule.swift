@@ -50,6 +50,29 @@ public class ExpoPusherBeamsModule: Module {
         }
     }
     
+    
+    //need to call this function somewheere
+    func observeNotifications(){
+        
+        NotificationCenter.default
+                          .addObserver(self,
+                                       selector:#selector(onAppActive(notification:)),
+                           name: .appActive,
+                           object: nil)
+        
+        
+        // observe other notifications ...
+    
+    }
+    
+    @objc func onAppActive(notification:Notification) {
+        let data = notification.object
+        let receivedValue = data! as! String
+        NSLog(receivedValue);
+    }
+    
+    
+    
     func printer() -> String {
         NSLog("Printing");
         return "Hello Gary!";

@@ -8,6 +8,12 @@ public class ExpoPusherBeamsDelegate: ExpoAppDelegateSubscriber {
         // The app has become active.
         NSLog("WE ARE ACTIVE- applicationDidBecomeActive");
         expoPusherBeamsModule.testEvent("applicationDidBecomeActive");
+        
+        // sending the notification with data that we need to send
+        // .appActive is the notification name declared in the extension below
+        // valueToSend can also be an object type
+        var valueToSend = "test value"
+        NotificationCenter.default.post(name: .appActive, object: valueToSend)
     }
 
     public func applicationWillResignActive(_ application: UIApplication) {
@@ -46,5 +52,14 @@ public class ExpoPusherBeamsDelegate: ExpoAppDelegateSubscriber {
     public func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         NSLog("Remote notification support is unavailable due to error: %@", error.localizedDescription);
     }
+}
+
+
+// can declare notification names
+extension Notification.Name {
+    static var appActive: Notification.Name {
+          return .init(rawValue: "App.Active") }
+    static var testName: Notification.Name {
+          return .init(rawValue: "Test.name") }
 }
 
