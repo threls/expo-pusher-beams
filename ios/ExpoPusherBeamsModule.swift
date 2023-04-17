@@ -12,21 +12,15 @@ public class ExpoPusherBeamsModule: Module {
         // The module will be accessible from `requireNativeModule('ExpoPusherBeams')` in JavaScript.
         Name("ExpoPusherBeams")
 
-        // Sets constant properties on the module. Can take a dictionary or a closure that returns a dictionary.
-        // Constants([
-        //   "PI": Double.pi
-        // ])
-
         // Defines event names that the module can send to JavaScript.
         Events(["onNotification", "registered", "debug"])
-
-//        // Defines a JavaScript synchronous function that runs the native code on the JavaScript thread.
-        Function("hello") {
-            return printer();
-        }
         
         Function("setInstanceId"){ (instanceId: String ) in
             setInstanceId(instanceId: instanceId)
+        }
+        
+        Function("clearAllState"){
+            clearAllState()
         }
         
         AsyncFunction("subscribe"){ (interest: String, promise: Promise) in
@@ -35,18 +29,24 @@ public class ExpoPusherBeamsModule: Module {
                     try self.subscribe(interest: interest)
                     promise.resolve()
                 } catch {
-                    promise.resolve();
+                    promise.reject(ExpoPusherBeamsError.subscription(interest: interest));
                 }
             }
         }
-//
-//        // Defines a JavaScript function that always returns a Promise and whose native code
-//        // is by default dispatched on the different thread than the JavaScript runtime runs on.
-        AsyncFunction("setValueAsync") { (value: String) in
-            // Send an event to JavaScript.
-            self.sendEvent("debug", [
-                "message": value
-            ])
+        
+        AsyncFunction("unsubscribe"){ (interest: String, promise: Promise) in
+            DispatchQueue.main.async {
+                do {
+                    try self.unsubscribe(interest: interest)
+                    promise.resolve()
+                } catch {
+                    promise.reject(ExpoPusherBeamsError.unsubscribe(interest: interest));
+                }
+            }
+        }
+        
+        AsyncFunction("setUserId"){ (userId: String, token: String, promise: Promise) in
+            setUserId(userId: userId, token: token, promise: promise)
         }
     }
     
@@ -60,44 +60,43 @@ public class ExpoPusherBeamsModule: Module {
                            name: .appActive,
                            object: nil)
         
+        NotificationCenter.default
+                          .addObserver(self,
+                                       selector:#selector(handleNotification(notification:)),
+                           name: .handleNotification,
+                           object: nil)
+
+        NotificationCenter.default
+                          .addObserver(self,
+                                       selector:#selector(setDeviceToken(notification:)),
+                           name: .deviceToken,
+                           object: nil)
         
-        // observe other notifications ...
-    
+        NotificationCenter.default
+                          .addObserver(self,
+                                       selector:#selector(handleError(notification:)),
+                           name: .error,
+                           object: nil)
     }
     
     @objc func onAppActive(notification:Notification) {
         let data = notification.object
         let receivedValue = data! as! String
         NSLog(receivedValue);
+        self.sendEvent("debug", [
+            "message": receivedValue
+        ])
     }
     
-    
-    
-    func printer() -> String {
-        NSLog("Printing");
-        return "Hello Gary!";
+    @objc func handleError(notification:Notification) {
+        let data = notification.object
+        let error = data! as! Error
+        NSLog("Received an error: %@", error.localizedDescription)
     }
     
-    func setInstanceId(instanceId: String) {
-        PushNotifications.shared.start(instanceId: instanceId);
-        PushNotifications.shared.registerForRemoteNotifications();
-    }
-    
-    func subscribe(interest: String) throws {
-        try PushNotifications.shared.addDeviceInterest(interest: interest)
-    }
-    
-    func clearAllState() {
-        PushNotifications.shared.clearAllState(completion: {
-            NSLog("clear all state END");
-        })
-    }
-    
-    func unsubscribe(interest: String) {
-        try? PushNotifications.shared.removeDeviceInterest(interest: interest);
-    }
-    
-    public func handleNotification(_ userInfo: [AnyHashable : Any]) {
+    @objc func handleNotification(notification:Notification) {
+        let userInfo = notification.userInfo!;
+        let userInfoAps = notification.userInfo?["aps"] as? Dictionary<String, AnyObject>;
         let state = UIApplication.shared.applicationState;
         
         var appState = "active";
@@ -113,23 +112,62 @@ public class ExpoPusherBeamsModule: Module {
         }
         
         // TODO: check if we should increment the badge count - (bool)[userInfo valueForKeyPath:@"aps.data.incrementBadge"]
-        UIApplication.shared.applicationIconBadgeNumber += 1;
+        if(userInfoAps?["data"]?["incrementBadge"] as? String == "true") {
+            UIApplication.shared.applicationIconBadgeNumber += 1;
+        }
         
         self.sendEvent("onNotification", [
-            "appState": appState
+            "appState": appState,
+            "userInfo": notification.userInfo
         ])
         
+        PushNotifications.shared.handleNotification(userInfo: userInfo)
     }
     
-    public func setDeviceToken(_ deviceToken: Data)
+    @objc func setDeviceToken(notification: Notification)
     {
+        let data = notification.object
+        let deviceToken = data! as! Data;
         PushNotifications.shared.registerDeviceToken(deviceToken);
         self.sendEvent("registered")
     }
     
-    public func testEvent(_ message: String) {
-        self.sendEvent("debug", [
-            "message": message
-        ])
+    func setInstanceId(instanceId: String) {
+        PushNotifications.shared.start(instanceId: instanceId);
+        PushNotifications.shared.registerForRemoteNotifications();
+    }
+    
+    func subscribe(interest: String) throws {
+        try PushNotifications.shared.addDeviceInterest(interest: interest)
+    }
+    
+    func unsubscribe(interest: String) throws {
+        try PushNotifications.shared.removeDeviceInterest(interest: interest);
+    }
+    
+    func clearAllState() {
+        PushNotifications.shared.clearAllState(completion: {
+            NSLog("clear all state END");
+        })
+    }
+    
+    func setUserId(userId: String, token: String, promise: Promise) {
+        let localTokenProvider = ExpoPusherBeamsLocalTokenProvider(withToken: token);
+        
+        PushNotifications.shared.setUserId(userId, tokenProvider: localTokenProvider, completion: { error in
+            guard error == nil else {
+                promise.reject(error!)
+                return
+            }
+            
+            promise.resolve()
+        })
+    }
+    
+    public required init(appContext: ExpoModulesCore.AppContext) {
+        // when importing EXGL, then this line gives:
+        // Value of type 'AppContext' has no member 'legacyModuleRegistry'
+        super.init(appContext: appContext);
+        observeNotifications();
     }
 }

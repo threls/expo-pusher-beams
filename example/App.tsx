@@ -4,19 +4,31 @@ import { StyleSheet, Text, View } from 'react-native';
 
 export default function App() {
   useEffect(() => {
-    console.log('Register debug listener', ExpoPusherBeams.hello());
+    console.log('Register debug listener');
     ExpoPusherBeams.addDebugListener((event) => {
       console.log('We got an event', event);
     });
-
-    ExpoPusherBeams.setValueAsync('Groot').then(() =>
-      console.log('Resolved groot')
-    );
   }, []);
+
+  useEffect(() => {
+    ExpoPusherBeams.setInstanceId('faec7487-fb5a-4e94-a93d-62c7f0d5c605');
+
+    ExpoPusherBeams.subscribe('hello')
+      .then(() => {
+        console.log('Groot', 'Subscribed');
+      })
+      .catch((reason) => {
+        console.error('Error subscribing', reason);
+      });
+
+    ExpoPusherBeams.addNotificationListener((ev) => {
+      console.log('Notification', JSON.stringify(ev));
+    });
+  });
 
   return (
     <View style={styles.container}>
-      <Text>{ExpoPusherBeams.hello()}</Text>
+      <Text>Hello world</Text>
     </View>
   );
 }
