@@ -16,7 +16,12 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "expo.modules.threlsexpopusherbeams.example"
+      "bundleIdentifier": "expo.modules.threlsexpopusherbeams.example",
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "remote-notification"
+        ]
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -27,6 +32,14 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "notification": {
+      "iosDisplayInForeground": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "e7fb5104-f993-4ef7-a14c-a244f46c76bf"
+      }
     }
   }
 }

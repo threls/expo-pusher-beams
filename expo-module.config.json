@@ -1,6 +1,7 @@
 {
   "platforms": ["ios", "android", "web"],
   "ios": {
+    "appDelegateSubscribers": ["ExpoPusherBeamsDelegate"],
     "modules": ["ExpoPusherBeamsModule"]
   },
   "android": {
