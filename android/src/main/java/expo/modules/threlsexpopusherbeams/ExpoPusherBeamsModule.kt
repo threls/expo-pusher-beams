@@ -1,9 +1,11 @@
 package expo.modules.threlsexpopusherbeams
 
+import android.util.Log
+import com.google.firebase.FirebaseApp
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
-import com.pusher.pushnotifications.*
-import expo.modules.core.Promise
+import com.pusher.pushnotifications.PushNotifications
+import expo.modules.kotlin.Promise
 
 class ExpoPusherBeamsModule : Module() {
   // Each module class must implement the definition function. The definition consists of components
@@ -21,30 +23,24 @@ class ExpoPusherBeamsModule : Module() {
     // Defines a JavaScript synchronous function that runs the native code on the JavaScript thread.
     Function("setInstanceId") { instanceId: String ->
       setInstanceId(instanceId)
+      sendEvent("registered")
     }
 
     Function("clearAllState") {
-
+      clearAllState()
     }
 
     // Defines a JavaScript function that always returns a Promise and whose native code
     // is by default dispatched on the different thread than the JavaScript runtime runs on.
     AsyncFunction("subscribe") { interest: String, promise: Promise ->
       subscribe(interest)
-      promise.resolve("")
-//      // Send an event to JavaScript.
-//      sendEvent("onChange", mapOf(
-//        "value" to interest
-//      ))
+      promise.resolve(null)
     }
 
     AsyncFunction("unsubscribe") { interest: String, promise: Promise ->
       // Send an event to JavaScript.
       unsubscribe(interest)
-      promise.resolve("")
-//      sendEvent("onChange", mapOf(
-//        "value" to interest
-//      ))
+      promise.resolve(null)
     }
 
     AsyncFunction("setUserId") { userId: String, token: String, promise: Promise ->
@@ -53,19 +49,25 @@ class ExpoPusherBeamsModule : Module() {
         "userId" to userId,
         "token" to token
       ))
-      promise.resolve("")
+      promise.resolve(null)
     }
   }
 
   private fun setInstanceId(instanceId: String) {
-    PushNotifications.start(appContext, instanceId)
+    appContext.reactContext?.let {
+      PushNotifications.start(it, instanceId);
+    };
   }
 
   private fun subscribe(interest: String) {
-//    PushNotifications.addDeviceInterest(interest)
+    PushNotifications.addDeviceInterest(interest)
   }
     
   private fun unsubscribe(interest: String) {
-//    PushNotifications.removeDeviceInterest(interest)
+    PushNotifications.removeDeviceInterest(interest)
+  }
+
+  private fun clearAllState() {
+    PushNotifications.clearAllState()
   }
 }
