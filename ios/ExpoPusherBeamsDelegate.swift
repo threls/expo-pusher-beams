@@ -2,54 +2,37 @@ import ExpoModulesCore
 import PushNotifications
 
 public class ExpoPusherBeamsDelegate: ExpoAppDelegateSubscriber {
-    let expoPusherBeamsModule = ExpoPusherBeamsModule(appContext: AppContext.init());
     
     public func applicationDidBecomeActive(_ application: UIApplication) {
-        // The app has become active.
-        NSLog("WE ARE ACTIVE- applicationDidBecomeActive");
-        expoPusherBeamsModule.testEvent("applicationDidBecomeActive");
-        
-        // sending the notification with data that we need to send
-        // .appActive is the notification name declared in the extension below
-        // valueToSend can also be an object type
-        var valueToSend = "test value"
-        NotificationCenter.default.post(name: .appActive, object: valueToSend)
+        NotificationCenter.default.post(name: .appActive, object: "applicationDidBecomeActive")
     }
 
     public func applicationWillResignActive(_ application: UIApplication) {
-        // The app is about to become inactive.
-        expoPusherBeamsModule.testEvent("applicationDidBecomeActive");
-        NSLog("WE ARE ACTIVE");
+        NotificationCenter.default.post(name: .appActive, object: "applicationWillResignActive")
     }
 
     public func applicationDidEnterBackground(_ application: UIApplication) {
-        // The app is now in the background.
-        expoPusherBeamsModule.testEvent("applicationDidBecomeActive");
-        NSLog("WE ARE ACTIVE - applicationDidEnterBackground");
+        NotificationCenter.default.post(name: .appActive, object: "applicationDidEnterBackground")
     }
 
     public func applicationWillEnterForeground(_ application: UIApplication) {
-        // The app is about to enter the foreground.
-        expoPusherBeamsModule.testEvent("applicationDidBecomeActive");
-        NSLog("WE ARE ACTIVE - applicationWillEnterForeground");
+        NotificationCenter.default.post(name: .appActive, object: "applicationWillEnterForeground")
     }
 
     public func applicationWillTerminate(_ application: UIApplication) {
-        // The app is about to terminate.
-//        expoPusherBeamsModule.testEvent("applicationDidBecomeActive");
+        NotificationCenter.default.post(name: .appActive, object: "applicationWillTerminate")
     }
 
     public func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-//        expoPusherBeamsModule.setDeviceToken(deviceToken)
+        NotificationCenter.default.post(name: .deviceToken, object: deviceToken)
     }
 
     public func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-        
-        NSLog("WE ARE ACTIVE - didReceiveRemoteNotification");
-//        expoPusherBeamsModule.handleNotification(userInfo);
+        NotificationCenter.default.post(name: .handleNotification, object: nil, userInfo: userInfo)
     }
 
     public func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        NotificationCenter.default.post(name: .error, object: error)
         NSLog("Remote notification support is unavailable due to error: %@", error.localizedDescription);
     }
 }
@@ -59,7 +42,11 @@ public class ExpoPusherBeamsDelegate: ExpoAppDelegateSubscriber {
 extension Notification.Name {
     static var appActive: Notification.Name {
           return .init(rawValue: "App.Active") }
-    static var testName: Notification.Name {
-          return .init(rawValue: "Test.name") }
+    static var handleNotification: Notification.Name {
+          return .init(rawValue: "Beams.Notification") }
+    static var deviceToken: Notification.Name {
+          return .init(rawValue: "Beams.DeviceToken") }
+    static var error: Notification.Name {
+          return .init(rawValue: "Beams.Error") }
 }
 
