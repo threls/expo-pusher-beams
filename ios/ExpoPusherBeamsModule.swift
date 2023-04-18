@@ -112,7 +112,7 @@ public class ExpoPusherBeamsModule: Module {
         }
         
         // TODO: check if we should increment the badge count - (bool)[userInfo valueForKeyPath:@"aps.data.incrementBadge"]
-        if(userInfoAps?["data"]?["incrementBadge"] as? String == "true") {
+        if(userInfoAps?["data"]?["incrementBadge"] as? Bool == true) {
             UIApplication.shared.applicationIconBadgeNumber += 1;
         }
         
