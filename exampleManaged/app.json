@@ -1,0 +1,36 @@
+{
+  "expo": {
+    "name": "exampleManaged",
+    "slug": "exampleManaged",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "expo.modules.threlsexpopusherbeams.examplemanaged",
+      "googleServicesFile": "./assets/google-services.json"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "2c5b6562-e6f8-4baa-a896-bac78f6f3d5e"
+      }
+    },
+    "owner": "threls"
+  }
+}

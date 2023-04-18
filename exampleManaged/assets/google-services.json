@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "599609095310",
+    "project_id": "expo-pusher-beams",
+    "storage_bucket": "expo-pusher-beams.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:599609095310:android:f0b8202d975c421f9b05df",
+        "android_client_info": {
+          "package_name": "expo.modules.threlsexpopusherbeams.example"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "599609095310-cbhbhout5ru4912lt8mo7moa1vp5ikgs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBI91t2LTg8rllwtCDn3cNAhMwVtp2TENI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "599609095310-cbhbhout5ru4912lt8mo7moa1vp5ikgs.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "599609095310-rpfi52blim5stec6tge493n5t7itrioi.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "expo.modules.threlsexpopusherbeams.example"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:599609095310:android:37e37f7eb8520a8e9b05df",
+        "android_client_info": {
+          "package_name": "expo.modules.threlsexpopusherbeams.examplemanaged"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "599609095310-cbhbhout5ru4912lt8mo7moa1vp5ikgs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBI91t2LTg8rllwtCDn3cNAhMwVtp2TENI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "599609095310-cbhbhout5ru4912lt8mo7moa1vp5ikgs.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "599609095310-rpfi52blim5stec6tge493n5t7itrioi.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "expo.modules.threlsexpopusherbeams.example"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
