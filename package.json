@@ -28,7 +28,9 @@
   "author": "ghili <gary@threls.com> (https://github.com/garyThrels)",
   "license": "MIT",
   "homepage": "https://github.com/threls/expo-pusher-beams#readme",
-  "dependencies": {},
+  "dependencies": {
+    "@expo/config-plugins": "~6.0.0"
+  },
   "devDependencies": {
     "@types/react": "^18.0.25",
     "@types/react-native": "^0.70.6",

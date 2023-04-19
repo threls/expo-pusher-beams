@@ -11,9 +11,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "expo.modules.threlsexpopusherbeams.examplemanaged"
@@ -34,6 +32,7 @@
         "projectId": "2c5b6562-e6f8-4baa-a896-bac78f6f3d5e"
       }
     },
+    "plugins": ["../app.plugin.js"],
     "owner": "threls"
   }
 }

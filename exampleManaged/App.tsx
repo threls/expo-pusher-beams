@@ -10,21 +10,21 @@ export default function App() {
     });
   }, []);
 
-  // useEffect(() => {
-  //   ExpoPusherBeams.setInstanceId('faec7487-fb5a-4e94-a93d-62c7f0d5c605');
+  useEffect(() => {
+    ExpoPusherBeams.setInstanceId('faec7487-fb5a-4e94-a93d-62c7f0d5c605');
 
-  //   ExpoPusherBeams.subscribe('hello')
-  //     .then(() => {
-  //       console.log('Groot', 'Subscribed');
-  //     })
-  //     .catch((reason) => {
-  //       console.error('Error subscribing', reason);
-  //     });
+    ExpoPusherBeams.subscribe('hello')
+      .then(() => {
+        console.log('Groot', 'Subscribed');
+      })
+      .catch((reason) => {
+        console.error('Error subscribing', reason);
+      });
 
-  //   ExpoPusherBeams.addNotificationListener((ev) => {
-  //     console.log('Notification', JSON.stringify(ev));
-  //   });
-  // });
+    ExpoPusherBeams.addNotificationListener((ev) => {
+      console.log('Notification', JSON.stringify(ev));
+    });
+  });
 
   return (
     <View style={styles.container}>

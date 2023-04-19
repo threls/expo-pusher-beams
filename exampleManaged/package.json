@@ -11,16 +11,14 @@
   },
   "dependencies": {
     "expo": "~48.0.11",
+    "expo-splash-screen": "~0.18.1",
     "expo-status-bar": "~1.4.4",
     "react": "18.2.0",
-    "react-native": "0.71.6",
-    "react-native-web": "~0.18.10",
-    "react-dom": "18.2.0",
-    "@expo/webpack-config": "^18.0.1",
-    "expo-splash-screen": "~0.18.1"
+    "react-native": "0.71.6"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "@expo/config-plugins": "^6.0.1",
     "expo-dev-client": "~2.2.1"
   },
   "private": true
