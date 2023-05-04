@@ -15,12 +15,14 @@ public class ExpoPusherBeamsModule: Module {
         // Defines event names that the module can send to JavaScript.
         Events(["onNotification", "registered", "debug"])
         
-        Function("setInstanceId"){ (instanceId: String ) in
+        AsyncFunction("setInstanceId"){ (instanceId: String, promise: Promise ) in
             setInstanceId(instanceId: instanceId)
+            promise.resolve()
         }
         
-        Function("clearAllState"){
+        AsyncFunction("clearAllState"){(promise: Promise) in
             clearAllState()
+            promise.resolve()
         }
         
         AsyncFunction("subscribe"){ (interest: String, promise: Promise) in

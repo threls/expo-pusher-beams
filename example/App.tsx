@@ -13,7 +13,7 @@ export default function App() {
   useEffect(() => {
     ExpoPusherBeams.setInstanceId('faec7487-fb5a-4e94-a93d-62c7f0d5c605');
 
-    ExpoPusherBeams.subscribe('hello')
+    ExpoPusherBeams.subscribe('debug-hello')
       .then(() => {
         console.log('Groot', 'Subscribed');
       })
@@ -36,7 +36,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#f00',
     alignItems: 'center',
     justifyContent: 'center',
   },

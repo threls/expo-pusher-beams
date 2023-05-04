@@ -12,8 +12,8 @@ import {
 } from './ExpoPusherBeams.types';
 import ExpoPusherBeamsModule from './ExpoPusherBeamsModule';
 
-export function setInstanceId(id: string): void {
-  ExpoPusherBeamsModule.setInstanceId(id);
+export async function setInstanceId(id: string) {
+  return await ExpoPusherBeamsModule.setInstanceId(id);
 }
 
 export async function subscribe(interest: string) {
@@ -24,8 +24,16 @@ export async function unsubscribe(interest: string) {
   return await ExpoPusherBeamsModule.unsubscribe(interest);
 }
 
+export async function clearAllState() {
+  return await ExpoPusherBeamsModule.clearAllState();
+}
+
+export async function setUserId(userId: string, token: string) {
+  return await ExpoPusherBeamsModule.setUserId(userId, token);
+}
+
 const emitter = new EventEmitter(
-  ExpoPusherBeamsModule ?? NativeModulesProxy.ExpoPusherBeams
+  ExpoPusherBeamsModule || NativeModulesProxy.ExpoPusherBeams
 );
 
 export function addDebugListener(

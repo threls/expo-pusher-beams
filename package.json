@@ -1,7 +1,7 @@
 {
   "name": "@threls/expo-pusher-beams",
-  "version": "0.1.0",
-  "description": "Pusher Beams client implemnetation for Expo",
+  "version": "0.1.5",
+  "description": "Pusher Beams client implementation for Expo",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "scripts": {

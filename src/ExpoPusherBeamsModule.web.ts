@@ -1,5 +1,6 @@
 import { EventEmitter } from 'expo-modules-core';
 import * as PusherPushNotifications from '@pusher/push-notifications-web';
+import { LocalTokenProvider } from './LocalTokenProvider';
 
 const emitter = new EventEmitter({} as any);
 
@@ -12,24 +13,29 @@ const checkBeamsClient = () => {
     );
 };
 
-const setInstanceId = (id: string) => {
+const setInstanceId = async (id: string) => {
   beamsClient = new PusherPushNotifications.Client({ instanceId: id });
   beamsClient.start();
 };
 
-const clearAllState = () => {
+const clearAllState = async () => {
   checkBeamsClient();
-  beamsClient.clearAllState();
+  await beamsClient.clearAllState();
 };
 
 const subscribe = async (interest: string) => {
   checkBeamsClient();
-  return beamsClient.addDeviceInterest(interest);
+  await beamsClient.addDeviceInterest(interest);
 };
 
 const unsubscribe = async (interest: string) => {
   checkBeamsClient();
-  return beamsClient.removeDeviceInterest(interest);
+  await beamsClient.removeDeviceInterest(interest);
+};
+
+const setUserId = async (userId: string, token: string) => {
+  checkBeamsClient();
+  await beamsClient.setUserId(userId, new LocalTokenProvider(token));
 };
 
 export default {
@@ -37,4 +43,5 @@ export default {
   subscribe,
   unsubscribe,
   clearAllState,
+  setUserId,
 };

@@ -1,10 +1,13 @@
 package expo.modules.threlsexpopusherbeams
 
+import LocalTokenProvider
 import android.util.Log
 import com.google.firebase.FirebaseApp
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 import com.pusher.pushnotifications.PushNotifications
+import com.pusher.pushnotifications.BeamsCallback
+import com.pusher.pushnotifications.PusherCallbackError
 import expo.modules.kotlin.Promise
 
 class ExpoPusherBeamsModule : Module() {
@@ -21,13 +24,15 @@ class ExpoPusherBeamsModule : Module() {
     Events("onNotification", "registered", "debug")
 
     // Defines a JavaScript synchronous function that runs the native code on the JavaScript thread.
-    Function("setInstanceId") { instanceId: String ->
+    AsyncFunction("setInstanceId") { instanceId: String, promise: Promise ->
       setInstanceId(instanceId)
       sendEvent("registered")
+      promise.resolve(null)
     }
 
-    Function("clearAllState") {
+    AsyncFunction("clearAllState") { promise: Promise ->
       clearAllState()
+      promise.resolve(null)
     }
 
     // Defines a JavaScript function that always returns a Promise and whose native code
@@ -44,12 +49,19 @@ class ExpoPusherBeamsModule : Module() {
     }
 
     AsyncFunction("setUserId") { userId: String, token: String, promise: Promise ->
-      // Send an event to JavaScript.
-      sendEvent("onChange", mapOf(
-        "userId" to userId,
-        "token" to token
-      ))
-      promise.resolve(null)
+      PushNotifications.setUserId(
+        userId,
+        LocalTokenProvider(token),
+        object : BeamsCallback<Void, PusherCallbackError> {
+          override fun onFailure(error: PusherCallbackError) {
+            promise.resolve("Could not login to Beams: \${error.message}");
+          }
+
+          override fun onSuccess(vararg values: Void) {
+            promise.resolve(null);
+          }
+        }
+    )
     }
   }
 
