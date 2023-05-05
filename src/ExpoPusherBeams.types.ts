@@ -1,7 +1,4 @@
-export type DebugEventPayload = {
-  message: string;
-};
-
 export type NotificationEventPayload = {
+  userInfo: any;
   appState: string;
 };

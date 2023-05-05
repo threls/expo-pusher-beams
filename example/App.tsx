@@ -1,34 +1,52 @@
 import * as ExpoPusherBeams from '@threls/expo-pusher-beams';
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 export default function App() {
+  const [value, setValue] = useState(Date.now());
+  const initialised = useRef<boolean>(false);
+
+  const init = async () => {
+    console.log('INIT', initialised.current);
+    if (!initialised.current) {
+      try {
+        console.log('Trying to set instance');
+        // Android - awaiting this results in blocking
+        ExpoPusherBeams.setInstanceId('8acccc2c-c595-4acc-861a-057a15e38f83');
+        initialised.current = true;
+
+        await ExpoPusherBeams.addNotificationListener((ev) => {
+          console.log('Notification', typeof ev, ev);
+        });
+
+        console.log('Subscribing');
+        await ExpoPusherBeams.subscribe('debug-hello')
+          .then(() => {
+            console.log('Subscribed');
+          })
+          .catch((reason) => {
+            console.error('Error subscribing', reason);
+          });
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  };
+
   useEffect(() => {
-    console.log('Register debug listener');
-    ExpoPusherBeams.addDebugListener((event) => {
-      console.log('We got an event', event);
-    });
+    setInterval(() => {
+      setValue(Date.now());
+    }, 1000);
   }, []);
 
   useEffect(() => {
-    ExpoPusherBeams.setInstanceId('faec7487-fb5a-4e94-a93d-62c7f0d5c605');
-
-    ExpoPusherBeams.subscribe('debug-hello')
-      .then(() => {
-        console.log('Groot', 'Subscribed');
-      })
-      .catch((reason) => {
-        console.error('Error subscribing', reason);
-      });
-
-    ExpoPusherBeams.addNotificationListener((ev) => {
-      console.log('Notification', JSON.stringify(ev));
-    });
-  });
+    init();
+  }, []);
 
   return (
     <View style={styles.container}>
       <Text>Hello world</Text>
+      <Text>{value}</Text>
     </View>
   );
 }

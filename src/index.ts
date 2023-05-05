@@ -6,10 +6,7 @@ import {
 
 // Import the native module. On web, it will be resolved to ExpoPusherBeams.web.ts
 // and on native platforms to ExpoPusherBeams.ts
-import {
-  DebugEventPayload,
-  NotificationEventPayload,
-} from './ExpoPusherBeams.types';
+import { NotificationEventPayload } from './ExpoPusherBeams.types';
 import ExpoPusherBeamsModule from './ExpoPusherBeamsModule';
 
 export async function setInstanceId(id: string) {
@@ -36,12 +33,6 @@ const emitter = new EventEmitter(
   ExpoPusherBeamsModule || NativeModulesProxy.ExpoPusherBeams
 );
 
-export function addDebugListener(
-  listener: (event: DebugEventPayload) => void
-): Subscription {
-  return emitter.addListener<DebugEventPayload>('debug', listener);
-}
-
 export function addNotificationListener(
   listener: (event: NotificationEventPayload) => void
 ): Subscription {
@@ -51,4 +42,4 @@ export function addNotificationListener(
   );
 }
 
-export { DebugEventPayload, NotificationEventPayload };
+export { NotificationEventPayload };

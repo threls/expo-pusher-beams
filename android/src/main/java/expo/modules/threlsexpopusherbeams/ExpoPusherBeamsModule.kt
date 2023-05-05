@@ -2,6 +2,7 @@ package expo.modules.threlsexpopusherbeams
 
 import LocalTokenProvider
 import android.util.Log
+import androidx.core.os.bundleOf
 import com.google.firebase.FirebaseApp
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
@@ -9,8 +10,13 @@ import com.pusher.pushnotifications.PushNotifications
 import com.pusher.pushnotifications.BeamsCallback
 import com.pusher.pushnotifications.PusherCallbackError
 import expo.modules.kotlin.Promise
+import expo.modules.kotlin.functions.Coroutine
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import org.json.JSONObject
 
-class ExpoPusherBeamsModule : Module() {
+class ExpoPusherBeamsModule() : Module() {
   // Each module class must implement the definition function. The definition consists of components
   // that describes the module's functionality and behavior.
   // See https://docs.expo.dev/modules/module-api for more details about available components.
@@ -24,10 +30,8 @@ class ExpoPusherBeamsModule : Module() {
     Events("onNotification", "registered", "debug")
 
     // Defines a JavaScript synchronous function that runs the native code on the JavaScript thread.
-    AsyncFunction("setInstanceId") { instanceId: String, promise: Promise ->
+    AsyncFunction("setInstanceId") Coroutine { instanceId: String ->
       setInstanceId(instanceId)
-      sendEvent("registered")
-      promise.resolve(null)
     }
 
     AsyncFunction("clearAllState") { promise: Promise ->
@@ -65,9 +69,21 @@ class ExpoPusherBeamsModule : Module() {
     }
   }
 
-  private fun setInstanceId(instanceId: String) {
+  private suspend fun setInstanceId(instanceId: String) = coroutineScope {
     appContext.reactContext?.let {
       PushNotifications.start(it, instanceId);
+
+      launch {
+        EventBus.subscribe<Map<String, Any?>> {notification ->
+          val notificationJson = JSONObject(notification as Map<*, *>)
+          Log.i("ThrelsPusher", "Received notification: $notificationJson")
+
+          sendEvent("onNotification", bundleOf(
+            "userInfo" to notificationJson.toString(),
+            "appState" to "active"
+          ))
+        }
+      }
     };
   }
 

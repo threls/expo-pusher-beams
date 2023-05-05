@@ -13,7 +13,7 @@ public class ExpoPusherBeamsModule: Module {
         Name("ExpoPusherBeams")
 
         // Defines event names that the module can send to JavaScript.
-        Events(["onNotification", "registered", "debug"])
+        Events(["onNotification"])
         
         AsyncFunction("setInstanceId"){ (instanceId: String, promise: Promise ) in
             setInstanceId(instanceId: instanceId)
@@ -53,14 +53,7 @@ public class ExpoPusherBeamsModule: Module {
     }
     
     
-    //need to call this function somewheere
     func observeNotifications(){
-        
-        NotificationCenter.default
-                          .addObserver(self,
-                                       selector:#selector(onAppActive(notification:)),
-                           name: .appActive,
-                           object: nil)
         
         NotificationCenter.default
                           .addObserver(self,
@@ -79,15 +72,6 @@ public class ExpoPusherBeamsModule: Module {
                                        selector:#selector(handleError(notification:)),
                            name: .error,
                            object: nil)
-    }
-    
-    @objc func onAppActive(notification:Notification) {
-        let data = notification.object
-        let receivedValue = data! as! String
-        NSLog(receivedValue);
-        self.sendEvent("debug", [
-            "message": receivedValue
-        ])
     }
     
     @objc func handleError(notification:Notification) {
@@ -131,7 +115,6 @@ public class ExpoPusherBeamsModule: Module {
         let data = notification.object
         let deviceToken = data! as! Data;
         PushNotifications.shared.registerDeviceToken(deviceToken);
-        self.sendEvent("registered")
     }
     
     func setInstanceId(instanceId: String) {
