@@ -1,0 +1,15 @@
+{
+  "userInfo": {
+    "notification": {
+      "title": "Dat",
+      "body": "OneTwo"
+    },
+    "data": {
+      "inAppMessage": "in app data",
+      "anything": "you want to send in json format",
+      "pusher": "{\"instanceId\": \"faec7487-fb5a-4e94-a93d-62c7f0d5c605\", \"publishId\": \"pubid-e953c027-a717-4fcb-945f-bd7899cdcc8b\",\"userShouldIgnore\": true}"
+    },
+    "topic": "96bd7718e6d4eb43e60a7beffdb6a04c"
+  },
+  "appState": "active"
+}
