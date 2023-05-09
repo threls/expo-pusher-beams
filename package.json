@@ -1,9 +1,10 @@
 {
   "name": "@threls/expo-pusher-beams",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Pusher Beams client implementation for Expo",
   "main": "build/index.js",
   "types": "build/index.d.ts",
+  "private": false,
   "scripts": {
     "build": "expo-module build",
     "clean": "expo-module clean",
@@ -29,7 +30,7 @@
   "license": "MIT",
   "homepage": "https://github.com/threls/expo-pusher-beams#readme",
   "dependencies": {
-    "@pusher/push-notifications-web": "^1.1.0"
+    "@pusher/push-notifications-web": "1.1.0"
   },
   "devDependencies": {
     "@expo/config-plugins": "~6.0.0",
