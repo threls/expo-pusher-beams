@@ -3,6 +3,11 @@ import PushNotifications
 
 public class ExpoPusherBeamsDelegate: ExpoAppDelegateSubscriber {
 
+    public func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        // Todo: Start pusher beams on finishLaunching
+        return true
+    }
+    
     public func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         NotificationCenter.default.post(name: .deviceToken, object: deviceToken)
     }

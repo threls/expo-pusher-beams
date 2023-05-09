@@ -21,8 +21,7 @@ public class ExpoPusherBeamsModule: Module {
         }
         
         AsyncFunction("clearAllState"){(promise: Promise) in
-            clearAllState()
-            promise.resolve()
+            clearAllState(promise: promise)
         }
         
         AsyncFunction("subscribe"){ (interest: String, promise: Promise) in
@@ -83,6 +82,7 @@ public class ExpoPusherBeamsModule: Module {
     @objc func handleNotification(notification:Notification) {
         let userInfo = notification.userInfo!;
         let userInfoAps = notification.userInfo?["aps"] as? Dictionary<String, AnyObject>;
+        let userInfoData = notification.userInfo?["data"] as? Dictionary<String, AnyObject>;
         let state = UIApplication.shared.applicationState;
         
         var appState = "active";
@@ -102,9 +102,14 @@ public class ExpoPusherBeamsModule: Module {
             UIApplication.shared.applicationIconBadgeNumber += 1;
         }
         
+        let notification = userInfoAps?["alert"] ?? nil;
+        
         self.sendEvent("onNotification", [
             "appState": appState,
-            "userInfo": notification.userInfo
+            "userInfo": [
+                "notification": notification as Any,
+                "data": userInfoData as Any
+            ]
         ])
         
         PushNotifications.shared.handleNotification(userInfo: userInfo)
@@ -130,9 +135,9 @@ public class ExpoPusherBeamsModule: Module {
         try PushNotifications.shared.removeDeviceInterest(interest: interest);
     }
     
-    func clearAllState() {
+    func clearAllState(promise: Promise) {
         PushNotifications.shared.clearAllState(completion: {
-            NSLog("clear all state END");
+            promise.resolve()
         })
     }
     
