@@ -28,6 +28,11 @@ Run `npx pod-install` after installing the npm package.
 
 ### Configure for Android
 
+### Configure for Web
+
+```
+expo customize:web
+```
 
 
 # Contributing

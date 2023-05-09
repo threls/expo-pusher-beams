@@ -13,14 +13,15 @@ public class ExpoPusherBeamsModule: Module {
         Name("ExpoPusherBeams")
 
         // Defines event names that the module can send to JavaScript.
-        Events(["onNotification", "registered", "debug"])
+        Events(["onNotification"])
         
-        Function("setInstanceId"){ (instanceId: String ) in
+        AsyncFunction("setInstanceId"){ (instanceId: String, promise: Promise ) in
             setInstanceId(instanceId: instanceId)
+            promise.resolve()
         }
         
-        Function("clearAllState"){
-            clearAllState()
+        AsyncFunction("clearAllState"){(promise: Promise) in
+            clearAllState(promise: promise)
         }
         
         AsyncFunction("subscribe"){ (interest: String, promise: Promise) in
@@ -51,14 +52,7 @@ public class ExpoPusherBeamsModule: Module {
     }
     
     
-    //need to call this function somewheere
     func observeNotifications(){
-        
-        NotificationCenter.default
-                          .addObserver(self,
-                                       selector:#selector(onAppActive(notification:)),
-                           name: .appActive,
-                           object: nil)
         
         NotificationCenter.default
                           .addObserver(self,
@@ -79,15 +73,6 @@ public class ExpoPusherBeamsModule: Module {
                            object: nil)
     }
     
-    @objc func onAppActive(notification:Notification) {
-        let data = notification.object
-        let receivedValue = data! as! String
-        NSLog(receivedValue);
-        self.sendEvent("debug", [
-            "message": receivedValue
-        ])
-    }
-    
     @objc func handleError(notification:Notification) {
         let data = notification.object
         let error = data! as! Error
@@ -97,6 +82,7 @@ public class ExpoPusherBeamsModule: Module {
     @objc func handleNotification(notification:Notification) {
         let userInfo = notification.userInfo!;
         let userInfoAps = notification.userInfo?["aps"] as? Dictionary<String, AnyObject>;
+        let userInfoData = notification.userInfo?["data"] as? Dictionary<String, AnyObject>;
         let state = UIApplication.shared.applicationState;
         
         var appState = "active";
@@ -116,9 +102,14 @@ public class ExpoPusherBeamsModule: Module {
             UIApplication.shared.applicationIconBadgeNumber += 1;
         }
         
+        let notification = userInfoAps?["alert"] ?? nil;
+        
         self.sendEvent("onNotification", [
             "appState": appState,
-            "userInfo": notification.userInfo
+            "userInfo": [
+                "notification": notification as Any,
+                "data": userInfoData as Any
+            ]
         ])
         
         PushNotifications.shared.handleNotification(userInfo: userInfo)
@@ -129,7 +120,6 @@ public class ExpoPusherBeamsModule: Module {
         let data = notification.object
         let deviceToken = data! as! Data;
         PushNotifications.shared.registerDeviceToken(deviceToken);
-        self.sendEvent("registered")
     }
     
     func setInstanceId(instanceId: String) {
@@ -145,9 +135,9 @@ public class ExpoPusherBeamsModule: Module {
         try PushNotifications.shared.removeDeviceInterest(interest: interest);
     }
     
-    func clearAllState() {
+    func clearAllState(promise: Promise) {
         PushNotifications.shared.clearAllState(completion: {
-            NSLog("clear all state END");
+            promise.resolve()
         })
     }
     

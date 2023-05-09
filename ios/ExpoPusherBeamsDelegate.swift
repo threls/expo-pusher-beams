@@ -2,27 +2,12 @@ import ExpoModulesCore
 import PushNotifications
 
 public class ExpoPusherBeamsDelegate: ExpoAppDelegateSubscriber {
+
+    public func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        // Todo: Start pusher beams on finishLaunching
+        return true
+    }
     
-    public func applicationDidBecomeActive(_ application: UIApplication) {
-        NotificationCenter.default.post(name: .appActive, object: "applicationDidBecomeActive")
-    }
-
-    public func applicationWillResignActive(_ application: UIApplication) {
-        NotificationCenter.default.post(name: .appActive, object: "applicationWillResignActive")
-    }
-
-    public func applicationDidEnterBackground(_ application: UIApplication) {
-        NotificationCenter.default.post(name: .appActive, object: "applicationDidEnterBackground")
-    }
-
-    public func applicationWillEnterForeground(_ application: UIApplication) {
-        NotificationCenter.default.post(name: .appActive, object: "applicationWillEnterForeground")
-    }
-
-    public func applicationWillTerminate(_ application: UIApplication) {
-        NotificationCenter.default.post(name: .appActive, object: "applicationWillTerminate")
-    }
-
     public func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         NotificationCenter.default.post(name: .deviceToken, object: deviceToken)
     }
@@ -40,8 +25,6 @@ public class ExpoPusherBeamsDelegate: ExpoAppDelegateSubscriber {
 
 // can declare notification names
 extension Notification.Name {
-    static var appActive: Notification.Name {
-          return .init(rawValue: "App.Active") }
     static var handleNotification: Notification.Name {
           return .init(rawValue: "Beams.Notification") }
     static var deviceToken: Notification.Name {

@@ -1,9 +1,27 @@
 package expo.modules.threlsexpopusherbeams
 
+import LocalTokenProvider
+import android.util.JsonWriter
+import android.util.Log
+import androidx.core.os.bundleOf
+import com.google.firebase.FirebaseApp
+import com.google.gson.Gson
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
+import com.pusher.pushnotifications.PushNotifications
+import com.pusher.pushnotifications.BeamsCallback
+import com.pusher.pushnotifications.PusherCallbackError
+import expo.modules.kotlin.Promise
+import expo.modules.kotlin.functions.Coroutine
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import org.json.JSONObject
+import org.json.JSONStringer
 
-class ExpoPusherBeamsModule : Module() {
+class ExpoPusherBeamsModule() : Module() {
   // Each module class must implement the definition function. The definition consists of components
   // that describes the module's functionality and behavior.
   // See https://docs.expo.dev/modules/module-api for more details about available components.
@@ -13,35 +31,74 @@ class ExpoPusherBeamsModule : Module() {
     // The module will be accessible from `requireNativeModule('ExpoPusherBeams')` in JavaScript.
     Name("ExpoPusherBeams")
 
-    // Sets constant properties on the module. Can take a dictionary or a closure that returns a dictionary.
-    Constants(
-      "PI" to Math.PI
-    )
-
     // Defines event names that the module can send to JavaScript.
-    Events("onChange")
+    Events("onNotification", "registered", "debug")
 
     // Defines a JavaScript synchronous function that runs the native code on the JavaScript thread.
-    Function("hello") {
-      "Hello world! 👋"
+    AsyncFunction("setInstanceId") Coroutine { instanceId: String ->
+      setInstanceId(instanceId)
+    }
+
+    AsyncFunction("clearAllState") { promise: Promise ->
+      clearAllState()
+      promise.resolve(null)
     }
 
     // Defines a JavaScript function that always returns a Promise and whose native code
     // is by default dispatched on the different thread than the JavaScript runtime runs on.
-    AsyncFunction("setValueAsync") { value: String ->
-      // Send an event to JavaScript.
-      sendEvent("onChange", mapOf(
-        "value" to value
-      ))
+    AsyncFunction("subscribe") { interest: String, promise: Promise ->
+      subscribe(interest)
+      promise.resolve(null)
     }
 
-    // Enables the module to be used as a native view. Definition components that are accepted as part of
-    // the view definition: Prop, Events.
-    View(ExpoPusherBeamsView::class) {
-      // Defines a setter for the `name` prop.
-      Prop("name") { view: ExpoPusherBeamsView, prop: String ->
-        println(prop)
-      }
+    AsyncFunction("unsubscribe") { interest: String, promise: Promise ->
+      // Send an event to JavaScript.
+      unsubscribe(interest)
+      promise.resolve(null)
     }
+
+    AsyncFunction("setUserId") { userId: String, token: String, promise: Promise ->
+      PushNotifications.setUserId(
+        userId,
+        LocalTokenProvider(token),
+        object : BeamsCallback<Void, PusherCallbackError> {
+          override fun onFailure(error: PusherCallbackError) {
+            promise.resolve("Could not login to Beams: \${error.message}");
+          }
+
+          override fun onSuccess(vararg values: Void) {
+            promise.resolve(null);
+          }
+        }
+    )
+    }
+  }
+
+  private fun CoroutineScope.handleEvents () = launch {
+    EventBus.subscribe<Map<String, Any?>> {notification ->
+      sendEvent("onNotification", bundleOf(
+        "userInfo" to Gson().toJson(notification),
+        "appState" to "active"
+      ))
+    }
+  }
+
+  private suspend fun setInstanceId(instanceId: String) = coroutineScope {
+    appContext.reactContext?.let {
+      PushNotifications.start(it, instanceId);
+      handleEvents();
+    };
+  }
+
+  private fun subscribe(interest: String) {
+    PushNotifications.addDeviceInterest(interest)
+  }
+    
+  private fun unsubscribe(interest: String) {
+    PushNotifications.removeDeviceInterest(interest)
+  }
+
+  private fun clearAllState() {
+    PushNotifications.clearAllState()
   }
 }
