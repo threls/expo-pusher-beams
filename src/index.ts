@@ -6,11 +6,18 @@ import {
 
 // Import the native module. On web, it will be resolved to ExpoPusherBeams.web.ts
 // and on native platforms to ExpoPusherBeams.ts
-import { NotificationEventPayload, WebOptions } from './ExpoPusherBeams.types';
+import {
+  NotificationEventPayload,
+  NotificationEventPayloadAndroid,
+  WebOptions,
+} from './ExpoPusherBeams.types';
 import ExpoPusherBeamsModule from './ExpoPusherBeamsModule';
+import { Platform } from 'react-native';
 
 export async function setInstanceId(id: string, webOptions?: WebOptions) {
-  return await ExpoPusherBeamsModule.setInstanceId(id, webOptions);
+  if (Platform.OS === 'web')
+    return await ExpoPusherBeamsModule.setInstanceId(id, webOptions);
+  else return await ExpoPusherBeamsModule.setInstanceId(id);
 }
 
 export async function subscribe(interest: string) {
@@ -33,13 +40,32 @@ const emitter = new EventEmitter(
   ExpoPusherBeamsModule || NativeModulesProxy.ExpoPusherBeams
 );
 
+const isParsedEventPayload = (
+  event: NotificationEventPayload | NotificationEventPayloadAndroid
+): event is NotificationEventPayload => typeof event.userInfo !== 'string';
+
 export function addNotificationListener(
   listener: (event: NotificationEventPayload) => void
 ): Subscription {
-  return emitter.addListener<NotificationEventPayload>(
-    'onNotification',
-    listener
-  );
+  return emitter.addListener<
+    NotificationEventPayload | NotificationEventPayloadAndroid
+  >('onNotification', (event) => {
+    // Issue returning a nested object with Android. Therefore we are parsing the returned string into an object before calling any listeners
+    if (!isParsedEventPayload(event)) {
+      listener({
+        ...event,
+        userInfo: JSON.parse(
+          event.userInfo
+        ) as NotificationEventPayload['userInfo'],
+      });
+    } else {
+      listener(event);
+    }
+  });
+}
+
+export function clearNotificationListeners() {
+  emitter.removeAllListeners('onNotification');
 }
 
 export { NotificationEventPayload };

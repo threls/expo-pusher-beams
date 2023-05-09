@@ -1,9 +1,11 @@
 package expo.modules.threlsexpopusherbeams
 
 import LocalTokenProvider
+import android.util.JsonWriter
 import android.util.Log
 import androidx.core.os.bundleOf
 import com.google.firebase.FirebaseApp
+import com.google.gson.Gson
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 import com.pusher.pushnotifications.PushNotifications
@@ -11,10 +13,13 @@ import com.pusher.pushnotifications.BeamsCallback
 import com.pusher.pushnotifications.PusherCallbackError
 import expo.modules.kotlin.Promise
 import expo.modules.kotlin.functions.Coroutine
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
+import org.json.JSONStringer
 
 class ExpoPusherBeamsModule() : Module() {
   // Each module class must implement the definition function. The definition consists of components
@@ -69,21 +74,19 @@ class ExpoPusherBeamsModule() : Module() {
     }
   }
 
+  private fun CoroutineScope.handleEvents () = launch {
+    EventBus.subscribe<Map<String, Any?>> {notification ->
+      sendEvent("onNotification", bundleOf(
+        "userInfo" to Gson().toJson(notification),
+        "appState" to "active"
+      ))
+    }
+  }
+
   private suspend fun setInstanceId(instanceId: String) = coroutineScope {
     appContext.reactContext?.let {
       PushNotifications.start(it, instanceId);
-
-      launch {
-        EventBus.subscribe<Map<String, Any?>> {notification ->
-          val notificationJson = JSONObject(notification as Map<*, *>)
-          Log.i("ThrelsPusher", "Received notification: $notificationJson")
-
-          sendEvent("onNotification", bundleOf(
-            "userInfo" to notificationJson.toString(),
-            "appState" to "active"
-          ))
-        }
-      }
+      handleEvents();
     };
   }
 

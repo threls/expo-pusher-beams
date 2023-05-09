@@ -8,6 +8,8 @@ import com.pusher.pushnotifications.PushNotificationReceivedListener
 import com.pusher.pushnotifications.PushNotifications
 import expo.modules.core.interfaces.ReactActivityLifecycleListener
 import android.app.Activity;
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 
@@ -21,7 +23,9 @@ class ExpoPusherBeamsActivityLifecycleListener(val activityContext: Context) : R
                     val map = mutableMapOf<String, Any?>()
 
                     val notification = remoteMessage.notification
-                    val data = remoteMessage.data
+                    val data = (remoteMessage.data["pusher"])?.let {
+                        Gson().fromJson<Map<String, Any?>>(it,  object : TypeToken<Map<String?, Any?>?>() {}.type)
+                    }?: { emptyMap<String, Any>() }
 
                     if( notification != null) {
                         map["title"] = notification.title
@@ -32,11 +36,13 @@ class ExpoPusherBeamsActivityLifecycleListener(val activityContext: Context) : R
                         map["color"] = notification.color
                         map["click_action"] = notification.clickAction
                         map["link"] = notification.link
-                        map["data"] = data
 
                         Log.i("ThrelsPusher", "Received notification - publishing to bus")
 
-                        postNotification(map);
+                        postNotification(mapOf(
+                            "notification" to map,
+                            "data" to data
+                        ));
                     }
                 }
             })
