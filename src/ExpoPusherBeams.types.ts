@@ -11,4 +11,5 @@ export type NotificationEventPayload<T = any> = {
 
 export type WebOptions = {
   serviceWorkerFileName?: string;
+  webBroadcastChannelName?: string;
 };

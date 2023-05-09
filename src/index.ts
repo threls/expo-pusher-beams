@@ -6,11 +6,11 @@ import {
 
 // Import the native module. On web, it will be resolved to ExpoPusherBeams.web.ts
 // and on native platforms to ExpoPusherBeams.ts
-import { NotificationEventPayload } from './ExpoPusherBeams.types';
+import { NotificationEventPayload, WebOptions } from './ExpoPusherBeams.types';
 import ExpoPusherBeamsModule from './ExpoPusherBeamsModule';
 
-export async function setInstanceId(id: string) {
-  return await ExpoPusherBeamsModule.setInstanceId(id);
+export async function setInstanceId(id: string, webOptions?: WebOptions) {
+  return await ExpoPusherBeamsModule.setInstanceId(id, webOptions);
 }
 
 export async function subscribe(interest: string) {
