@@ -1,27 +1,29 @@
 package expo.modules.threlsexpopusherbeams
 
 import LocalTokenProvider
-import android.util.JsonWriter
+import android.content.Context
 import android.util.Log
 import androidx.core.os.bundleOf
-import com.google.firebase.FirebaseApp
 import com.google.gson.Gson
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 import com.pusher.pushnotifications.PushNotifications
 import com.pusher.pushnotifications.BeamsCallback
 import com.pusher.pushnotifications.PusherCallbackError
+import expo.modules.core.interfaces.LifecycleEventListener
 import expo.modules.kotlin.Promise
+import expo.modules.kotlin.exception.Exceptions
 import expo.modules.kotlin.functions.Coroutine
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import org.json.JSONObject
-import org.json.JSONStringer
 
 class ExpoPusherBeamsModule() : Module() {
+  private val context: Context
+    get() = appContext.reactContext ?: throw Exceptions.ReactContextLost()
+  private val currentActivity
+    get() = appContext.currentActivity ?: throw Exceptions.MissingActivity()
+
   // Each module class must implement the definition function. The definition consists of components
   // that describes the module's functionality and behavior.
   // See https://docs.expo.dev/modules/module-api for more details about available components.
@@ -31,8 +33,11 @@ class ExpoPusherBeamsModule() : Module() {
     // The module will be accessible from `requireNativeModule('ExpoPusherBeams')` in JavaScript.
     Name("ExpoPusherBeams")
 
+    OnCreate {
+      ExpoPusherBeamsLifecycleEvents(context, currentActivity, appContext.legacyModuleRegistry)
+    }
     // Defines event names that the module can send to JavaScript.
-    Events("onNotification", "registered", "debug")
+    Events("onNotification", "debug")
 
     // Defines a JavaScript synchronous function that runs the native code on the JavaScript thread.
     AsyncFunction("setInstanceId") Coroutine { instanceId: String ->
@@ -74,20 +79,8 @@ class ExpoPusherBeamsModule() : Module() {
     }
   }
 
-  private fun CoroutineScope.handleEvents () = launch {
-    EventBus.subscribe<Map<String, Any?>> {notification ->
-      sendEvent("onNotification", bundleOf(
-        "userInfo" to Gson().toJson(notification),
-        "appState" to "active"
-      ))
-    }
-  }
-
   private suspend fun setInstanceId(instanceId: String) = coroutineScope {
-    appContext.reactContext?.let {
-      PushNotifications.start(it, instanceId);
-      handleEvents();
-    };
+    PushNotifications.start(context, instanceId);
   }
 
   private fun subscribe(interest: String) {

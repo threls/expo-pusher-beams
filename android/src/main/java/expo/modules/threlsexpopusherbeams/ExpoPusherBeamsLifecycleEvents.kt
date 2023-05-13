@@ -1,22 +1,24 @@
-
 package expo.modules.threlsexpopusherbeams
 
+import android.app.Activity
 import android.content.Context
 import android.util.Log
+import androidx.core.os.bundleOf
 import com.google.firebase.messaging.RemoteMessage
 import com.pusher.pushnotifications.PushNotificationReceivedListener
 import com.pusher.pushnotifications.PushNotifications
-import expo.modules.core.interfaces.ReactActivityLifecycleListener
-import android.app.Activity;
-import com.google.gson.Gson
-import com.google.gson.JsonElement
-import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.runBlocking
-import org.json.JSONObject
+import expo.modules.core.ModuleRegistry
+import expo.modules.core.interfaces.LifecycleEventListener
+import expo.modules.core.interfaces.services.EventEmitter
 
-class ExpoPusherBeamsActivityLifecycleListener(val activityContext: Context) : ReactActivityLifecycleListener {
-    override fun onResume(activity: Activity) {
-        super.onResume(activity);
+class ExpoPusherBeamsLifecycleEvents(val context: Context, val activity: Activity, val moduleRegistry: ModuleRegistry): LifecycleEventListener {
+    private var eventEmitter: EventEmitter = moduleRegistry.getModule(EventEmitter::class.java)
+
+    override fun onHostResume() {
+        eventEmitter.emit("debug", bundleOf(
+            "message" to "On host resume"
+        ))
+
         PushNotifications.setOnMessageReceivedListenerForVisibleActivity(
             activity,
             object : PushNotificationReceivedListener {
@@ -36,20 +38,26 @@ class ExpoPusherBeamsActivityLifecycleListener(val activityContext: Context) : R
                         map["click_action"] = notification.clickAction
                         map["link"] = notification.link
 
-                        Log.i("ThrelsPusher", "Received notification - publishing to bus")
-
-                        postNotification(mapOf(
-                            "notification" to map,
-                            "data" to data
-                        ));
+                        Log.i("ThrelsPusher", "Received notification - publishing to event bus")
+                        eventEmitter.emit("onNotification", bundleOf(
+                            "userInfo" to mapOf(
+                                "notification" to map,
+                                "data" to data
+                            ),
+                            "appState" to "active"
+                        ))
                     }
                 }
             })
     }
 
-   fun postNotification(notification: Map<String, Any?>) {
-       runBlocking {
-           EventBus.publish(notification)
-       }
-   }
+    override fun onHostPause() {
+        eventEmitter.emit("debug", bundleOf(
+            "message" to "On host pause"
+        ))
+    }
+
+    override fun onHostDestroy() {
+    }
+
 }
