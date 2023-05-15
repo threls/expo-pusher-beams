@@ -193,7 +193,12 @@ dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
 
-    implementation 'com.google.firebase:firebase-messaging:21.1.0'
+    implementation platform('com.google.firebase:firebase-bom:32.0.0')
+    implementation 'com.google.firebase:firebase-messaging-ktx'
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-installations-ktx'
+    implementation 'com.google.firebase:firebase-iid:21.1.0'
+
     implementation 'com.pusher:push-notifications-android:1.9.2'
 
     def isGifEnabled = (findProperty('expo.gif.enabled') ?: "") == "true";

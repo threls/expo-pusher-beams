@@ -18,8 +18,6 @@ import expo.modules.kotlin.functions.Coroutine
 import kotlinx.coroutines.coroutineScope
 
 class ExpoPusherBeamsModule : Module() {
-    private val context: Context
-        get() = appContext.reactContext ?: throw Exceptions.ReactContextLost()
     private val currentActivity
         get() = appContext.currentActivity ?: throw Exceptions.MissingActivity()
 
@@ -76,8 +74,9 @@ class ExpoPusherBeamsModule : Module() {
         }
 
         // Defines a JavaScript synchronous function that runs the native code on the JavaScript thread.
-        AsyncFunction("setInstanceId") Coroutine { instanceId: String ->
+        AsyncFunction("setInstanceId") { instanceId: String, promise: Promise ->
             setInstanceId(instanceId)
+            promise.resolve(null)
         }
 
         AsyncFunction("clearAllState") { promise: Promise ->
@@ -115,8 +114,10 @@ class ExpoPusherBeamsModule : Module() {
         }
     }
 
-    private suspend fun setInstanceId(instanceId: String) = coroutineScope {
-        PushNotifications.start(context, instanceId)
+    private fun setInstanceId(instanceId: String) {
+        appContext.reactContext?.let {
+            PushNotifications.start(it, instanceId);
+        };
     }
 
     private fun subscribe(interest: String) {
