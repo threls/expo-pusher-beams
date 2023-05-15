@@ -5,8 +5,12 @@ const file_1 = require("./utils/file");
 const { mergeContents, removeGeneratedContents, createGeneratedHeaderComment, } = require('@expo/config-plugins/build/utils/generateCode');
 const androidAppDependencies = [
     `dependencies {`,
-    `\timplementation 'com.google.firebase:firebase-messaging:21.1.0'`,
-    `\timplementation 'com.pusher:push-notifications-android:1.9.0'`,
+    `\timplementation platform('com.google.firebase:firebase-bom:32.0.0')`,
+    `\timplementation 'com.google.firebase:firebase-messaging-ktx'`,
+    `\timplementation 'com.google.firebase:firebase-analytics-ktx'`,
+    `\timplementation 'com.google.firebase:firebase-installations-ktx'`,
+    `\timplementation 'com.google.firebase:firebase-iid:21.1.0'`,
+    `\timplementation 'com.pusher:push-notifications-android:1.9.2'`,
     `}`,
 ];
 const iosPodDependencies = [`\tpod 'PushNotifications'`];
