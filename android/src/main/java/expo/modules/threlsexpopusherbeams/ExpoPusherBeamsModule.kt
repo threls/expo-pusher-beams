@@ -1,11 +1,9 @@
 package expo.modules.threlsexpopusherbeams
 
 import LocalTokenProvider
-import android.content.Context
 import android.util.Log
 import androidx.core.os.bundleOf
 import com.google.firebase.messaging.RemoteMessage
-import com.google.gson.Gson
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 import com.pusher.pushnotifications.PushNotifications
@@ -14,8 +12,7 @@ import com.pusher.pushnotifications.PushNotificationReceivedListener
 import com.pusher.pushnotifications.PusherCallbackError
 import expo.modules.kotlin.Promise
 import expo.modules.kotlin.exception.Exceptions
-import expo.modules.kotlin.functions.Coroutine
-import kotlinx.coroutines.coroutineScope
+import org.json.JSONObject
 
 class ExpoPusherBeamsModule : Module() {
     private val currentActivity
@@ -32,7 +29,7 @@ class ExpoPusherBeamsModule : Module() {
 
         // Defines event names that the module can send to JavaScript.
         Events("onNotification")
-        
+
         OnActivityEntersForeground {
             PushNotifications.setOnMessageReceivedListenerForVisibleActivity(
                 currentActivity,
@@ -59,12 +56,12 @@ class ExpoPusherBeamsModule : Module() {
                             )
                             sendEvent(
                                 "onNotification", bundleOf(
-                                    "userInfo" to Gson().toJson(
+                                    "userInfo" to JSONObject(
                                         mapOf(
                                             "notification" to map,
                                             "data" to data
                                         )
-                                    ),
+                                    ).toString(),
                                     "appState" to "active"
                                 )
                             )
