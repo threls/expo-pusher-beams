@@ -72,10 +72,16 @@ const setUserId = async (userId: string, token: string) => {
   await beamsClient.setUserId(userId, new LocalTokenProvider(token));
 };
 
+const stop = async () => {
+  checkBeamsClient();
+  await beamsClient.stop();
+};
+
 export default {
   setInstanceId,
   subscribe,
   unsubscribe,
   clearAllState,
   setUserId,
+  stop,
 };
