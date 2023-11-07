@@ -109,6 +109,11 @@ class ExpoPusherBeamsModule : Module() {
                 }
             )
         }
+
+        AsyncFunction("stop") { promise: Promise ->
+            PushNotifications.stop()
+            promise.resolve(null)
+        }
     }
 
     private fun setInstanceId(instanceId: String) {

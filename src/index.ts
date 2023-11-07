@@ -36,6 +36,10 @@ export async function setUserId(userId: string, token: string) {
   return await ExpoPusherBeamsModule.setUserId(userId, token);
 }
 
+export async function stop() {
+  return await ExpoPusherBeamsModule.stop();
+}
+
 const emitter = new EventEmitter(
   ExpoPusherBeamsModule || NativeModulesProxy.ExpoPusherBeams
 );

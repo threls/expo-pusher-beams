@@ -49,6 +49,10 @@ public class ExpoPusherBeamsModule: Module {
         AsyncFunction("setUserId"){ (userId: String, token: String, promise: Promise) in
             setUserId(userId: userId, token: token, promise: promise)
         }
+
+        AsyncFunction("stop"){(promise: Promise) in
+            stop(promise: promise)
+        }
     }
     
     
@@ -152,6 +156,11 @@ public class ExpoPusherBeamsModule: Module {
             
             promise.resolve()
         })
+    }
+
+    func stop(promise: Promise) {
+        PushNotifications.shared.stop();
+        promise.resolve();
     }
     
     public required init(appContext: ExpoModulesCore.AppContext) {
