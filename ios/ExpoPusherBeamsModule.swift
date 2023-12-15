@@ -159,8 +159,9 @@ public class ExpoPusherBeamsModule: Module {
     }
 
     func stop(promise: Promise) {
-        PushNotifications.shared.stop();
-        promise.resolve();
+        PushNotifications.shared.stop(completion: {
+            promise.resolve();
+        });
     }
     
     public required init(appContext: ExpoModulesCore.AppContext) {

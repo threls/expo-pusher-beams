@@ -111,7 +111,7 @@ class ExpoPusherBeamsModule : Module() {
         }
 
         AsyncFunction("stop") { promise: Promise ->
-            PushNotifications.stop()
+            stop()
             promise.resolve(null)
         }
     }
@@ -132,5 +132,9 @@ class ExpoPusherBeamsModule : Module() {
 
     private fun clearAllState() {
         PushNotifications.clearAllState()
+    }
+
+    private fun stop() {
+        PushNotifications.stop()
     }
 }
