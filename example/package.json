@@ -6,7 +6,7 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
-    "dev-build": "npx eas build --profile development --local"
+    "dev-build": "npx eas build --profile development"
   },
   "dependencies": {
     "@expo/webpack-config": "~19.0.1",
