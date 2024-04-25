@@ -1,6 +1,6 @@
 {
   "name": "@threls/expo-pusher-beams",
-  "version": "0.1.15",
+  "version": "1.0.0",
   "description": "Pusher Beams client implementation for Expo",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -33,7 +33,7 @@
     "@pusher/push-notifications-web": "1.1.0"
   },
   "devDependencies": {
-    "@expo/config-plugins": "~6.0.0",
+    "@expo/config-plugins": "~7.8.0",
     "@types/react": "^18.0.25",
     "@types/react-native": "^0.70.6",
     "expo-module-scripts": "^3.0.4",
