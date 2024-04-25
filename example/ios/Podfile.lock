@@ -9,7 +9,7 @@ PODS:
     - ExpoModulesCore
   - EXFont (11.1.1):
     - ExpoModulesCore
-  - Expo (48.0.10):
+  - Expo (48.0.11):
     - ExpoModulesCore
   - ExpoKeepAwake (12.0.1):
     - ExpoModulesCore
@@ -17,7 +17,7 @@ PODS:
     - React-Core
     - React-RCTAppDelegate
     - ReactCommon/turbomodule/core
-  - ExpoPusherBeams (0.1.0):
+  - ExpoPusherBeams (0.1.15):
     - ExpoModulesCore
     - PushNotifications
   - FBLazyVector (0.71.6)
@@ -519,10 +519,10 @@ SPEC CHECKSUMS:
   EXConstants: f348da07e21b23d2b085e270d7b74f282df1a7d9
   EXFileSystem: 844e86ca9b5375486ecc4ef06d3838d5597d895d
   EXFont: 6ea3800df746be7233208d80fe379b8ed74f4272
-  Expo: b04d142a2b477a391b47c62d179c1a9e1140e6ad
+  Expo: 81418098ffb16914b2e190f54e06db923248e4a1
   ExpoKeepAwake: 69f5f627670d62318410392d03e0b5db0f85759a
   ExpoModulesCore: 6e0259511f4c4341b6b8357db393624df2280828
-  ExpoPusherBeams: 90f3a04eec02d009f99d4f4c9c771cc922dfc130
+  ExpoPusherBeams: 845d5affcd3f6ad2821275b351d75f4dd55d1463
   FBLazyVector: a83ceaa8a8581003a623facdb3c44f6d4f342ac5
   FBReactNativeSpec: 85eee79837cb797ab6176f0243a2b40511c09158
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
@@ -561,4 +561,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 9e2eb2ebfd7f158554002be9da55451a8e2dcdfc
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.15.2

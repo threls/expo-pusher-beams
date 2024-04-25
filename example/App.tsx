@@ -13,7 +13,7 @@ export default function App() {
         console.log('Trying to set instance');
         // Android - awaiting this results in blocking
         await ExpoPusherBeams.setInstanceId(
-          'faec7487-fb5a-4e94-a93d-62c7f0d5c605'
+          '8f16b43e-3f47-4bf8-99b0-cd09c8514327'
         );
         console.log('Instance is set');
         initialised.current = true;
@@ -50,6 +50,7 @@ export default function App() {
     <View style={styles.container}>
       <Text>Hello world</Text>
       <Text>{value}</Text>
+      <Text>cd09c8514327</Text>
     </View>
   );
 }
